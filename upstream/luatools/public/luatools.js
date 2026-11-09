@@ -1469,6 +1469,7 @@
         overlay.className = "luatools-settings-overlay";
         overlay.style.cssText =
           "position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(12px);z-index:99999;display:flex;align-items:center;justify-content:center;";
+        if (window.__LuaToolsClientOverlayHost) overlay.style.position = "absolute";
 
         const modal = document.createElement("div");
         const colors = getThemeColors();
@@ -1679,6 +1680,14 @@
         );
         cardGrid.appendChild(fetchApisBtn);
 
+        const cloudBtn = createCardButton(
+          "lt-settings-cloud",
+          "menu.cloud",
+          "Cloud Login",
+          "fa-cloud",
+        );
+        cardGrid.appendChild(cloudBtn);
+
         container.appendChild(cardGrid);
 
         body.appendChild(container);
@@ -1688,7 +1697,7 @@
         modal.appendChild(header);
         modal.appendChild(body);
         overlay.appendChild(modal);
-        document.body.appendChild(overlay);
+        (window.__LuaToolsClientOverlayHost || document.body).appendChild(overlay);
 
         // Re-scan elements for gamepad navigation
         setTimeout(function () {
@@ -1767,6 +1776,13 @@
             } catch (_) {}
           });
         }
+
+        cloudBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+          Millennium.callServerMethod("luatools", "OpenCloudRedirect", {
+            contentScriptQuery: "",
+          });
+        });
 
         if (closeBtn) {
           closeBtn.addEventListener("click", function (e) {
@@ -7902,7 +7918,7 @@
             backendLog("LuaTools library navigation unavailable: " + String(err));
           }
           setTimeout(function () {
-            showSettingsManagerPopup(false, null);
+            showSettingsPopup();
           }, 400);
         };
         host.appendChild(button);

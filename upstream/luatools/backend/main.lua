@@ -508,6 +508,13 @@ function OpenExternalUrl(url)
     return json_ok({ success = true })
 end
 
+function OpenCloudRedirect()
+    local ok, result = pcall(m_utils.exec,
+        'env -u LD_PRELOAD -u LD_AUDIT -u LD_LIBRARY_PATH flatpak run org.cloudredirect.CloudRedirect >/dev/null 2>&1 &')
+    if not ok then return json_err(result) end
+    return json_ok({ success = true })
+end
+
 function GetSettingsConfig()
     local ok, payload = pcall(settings_manager.get_settings_payload)
     if not ok then
