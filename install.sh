@@ -4,7 +4,7 @@
 # ============================================================================
 #  Installs the full stack in a single command:
 #
-#    curl -fsSL https://raw.githubusercontent.com/swwayps/luatools-moon/millennium/install.sh | bash
+#    curl -fsSL https://raw.githubusercontent.com/Febsho/luatools-moon/millennium/install.sh | bash
 #
 #  Pipeline:
 #    1. Pre-flight checks (not-root, x86_64, internet, NATIVE Steam).
@@ -39,7 +39,7 @@ SLS_ASSET_PREFIX="slsteam-moon-linux"          # asset is slsteam-moon-linux-<ve
 # so publishing a new version (e.g. v2.5) needs no installer edit.
 SLS_ASSET_GLOB="^${SLS_ASSET_PREFIX}-[0-9][0-9.]*\\.zip$"
 
-PLUGIN_REPO="swwayps/luatools-moon"
+PLUGIN_REPO="Febsho/luatools-moon"
 PLUGIN_ASSET="luatools-linux.zip"
 PLUGIN_NAME="luatools"                          # plugin.json "name"
 MILLENNIUM_COMPAT_RAW_BASE="https://raw.githubusercontent.com/${PLUGIN_REPO}/millennium/millennium/backend"

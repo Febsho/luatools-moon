@@ -5,7 +5,7 @@
 Install the Linux runtime integration and LuaTools plugin with one command:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/swwayps/luatools-moon/millennium/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Febsho/luatools-moon/millennium/install.sh | bash
 ```
 
 > **Requirements:** Linux x86_64 and **native Steam** installed from your package
@@ -44,12 +44,12 @@ Reference material:
 
 ## Support
 
-Open an issue: https://github.com/swwayps/luatools-moon/issues
+Open an issue: https://github.com/Febsho/luatools-moon/issues
 
 ## Uninstall
 
 Want to remove everything? Run:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/swwayps/luatools-moon/millennium/uninstall.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Febsho/luatools-moon/millennium/uninstall.sh | bash
 ```
