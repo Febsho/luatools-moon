@@ -6311,7 +6311,8 @@
     }
 
     // Store Header Button Logic (always visible)
-    const headerContainer = document.querySelector("._1wn1lBlAzl3HMRqS1llwie");
+    const steamHeader = document.querySelector("._1wn1lBlAzl3HMRqS1llwie");
+    const headerContainer = steamHeader || document.body;
     if (
       headerContainer &&
       !document.querySelector(".luatools-header-button") &&
@@ -6324,6 +6325,10 @@
       headerBtn.tabIndex = "0";
       headerBtn.title = "LuaTools Settings";
       headerBtn.setAttribute("data-tooltip-text", "LuaTools Settings");
+      if (!steamHeader) {
+        headerBtn.style.cssText =
+          "position:fixed;top:48px;right:20px;z-index:9999;";
+      }
 
       const img = document.createElement("img");
       img.style.height = "18px";
