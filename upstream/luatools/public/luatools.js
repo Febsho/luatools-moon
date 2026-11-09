@@ -912,9 +912,6 @@
     );
   }
 
-  // Trigger load (non-blocking). Keeps DEFAULT_THEMES as a safe fallback.
-  const themeLoadPromise = loadThemes();
-
   function getCurrentThemeKey() {
     try {
       const settings = window.__LuaToolsSettings || {};
@@ -1220,10 +1217,6 @@
     const themeKey = getCurrentThemeKey();
     const theme = getCurrentTheme();
     const styles = generateThemeStyles(theme);
-
-    try {
-      ensureThemeStylesheet(themeKey);
-    } catch (_) {}
 
     if (styleEl) {
       styleEl.textContent = styles;
