@@ -1,3 +1,4 @@
+(() => {
 const MILLENNIUM_IS_CLIENT_MODULE = false;
 const pluginName = "luatools";
 function InitializePlugins() {
@@ -25,6 +26,8 @@ function ExecutePluginModule() {
     }
 }
 ExecutePluginModule()
+})();
+(() => {
 const MILLENNIUM_IS_CLIENT_MODULE = false;
 const pluginName = "steam-db";
 function InitializePlugins() {
@@ -194,3 +197,4 @@ function ExecutePluginModule() {
     });
 }
 ExecutePluginModule()
+})();
