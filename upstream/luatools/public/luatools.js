@@ -3459,6 +3459,11 @@
     const modal = document.createElement("div");
     const settingsModalColors = getThemeColors();
     modal.style.cssText = `position:relative;background:${settingsModalColors.modalBg};color:${settingsModalColors.text};border:1px solid ${settingsModalColors.border};border-radius:16px;width:750px;max-height:88vh;padding:0;display:flex;flex-direction:column;box-shadow:0 24px 80px rgba(0,0,0,.65), 0 0 0 1px ${settingsModalColors.shadowRgba};animation:slideUp 0.12s ease-out;overflow:hidden;`;
+    if (window.__LuaToolsClientOverlayHost) {
+      overlay.style.position = "absolute";
+      modal.style.maxHeight =
+        Math.round(window.__LuaToolsClientOverlayHost.getBoundingClientRect().height * 0.88) + "px";
+    }
 
     const header = document.createElement("div");
     const settingsHeaderColors = getThemeColors();
@@ -3613,7 +3618,7 @@
     modal.appendChild(contentWrap);
     modal.appendChild(btnRow);
     overlay.appendChild(modal);
-    document.body.appendChild(overlay);
+    (window.__LuaToolsClientOverlayHost || document.body).appendChild(overlay);
 
     // Re-scan elements for gamepad navigation
     setTimeout(function () {
@@ -7859,6 +7864,55 @@
     });
   }
   bootSettings();
+
+  // Steam's plugin bootstrap document is hidden. Mount the launcher in the
+  // visible Desktop window supplied by Millennium's window hook instead.
+  if (
+    window.location.hostname === "steamloopback.host" &&
+    typeof Millennium !== "undefined" &&
+    typeof Millennium.AddWindowCreateHook === "function"
+  ) {
+    Millennium.AddWindowCreateHook(function (context) {
+      if (!context || !/^SP Desktop_uid/.test(context.m_strName || "")) return;
+      const host = context.m_element;
+      if (!host) return;
+      let attempts = 0;
+      const attach = function () {
+        if (host.querySelector("#luatools-client-launcher")) return true;
+        if (!host.getBoundingClientRect().width) return false;
+        const button = document.createElement("button");
+        button.id = "luatools-client-launcher";
+        button.type = "button";
+        button.textContent = "🌕";
+        button.title = "LuaTools Settings";
+        button.setAttribute("aria-label", "LuaTools Settings");
+        button.style.cssText =
+          "position:absolute;top:7px;left:260px;width:28px;height:28px;" +
+          "padding:0;border:1px solid #9b7429;border-radius:50%;" +
+          "background:#e6b547;color:#1b2838;font-size:17px;" +
+          "cursor:pointer;pointer-events:auto;-webkit-app-region:no-drag;" +
+          "z-index:2147483647;";
+        button.onclick = function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+          window.__LuaToolsClientOverlayHost = host;
+          try {
+            SteamClient.URL.ExecuteSteamURL("steam://open/games");
+          } catch (err) {
+            backendLog("LuaTools library navigation unavailable: " + String(err));
+          }
+          setTimeout(function () {
+            showSettingsManagerPopup(false, null);
+          }, 400);
+        };
+        host.appendChild(button);
+        return true;
+      };
+      const timer = setInterval(function () {
+        if (attach() || ++attempts >= 60) clearInterval(timer);
+      }, 250);
+    });
+  }
 
   // Use MutationObserver to catch dynamically added content
   // Heavily optimized and throttled version to avoid blocking gamepad
