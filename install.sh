@@ -1311,6 +1311,19 @@ install_slsteam_moon() {
 	# res/config.yaml template) is still extracted, so the cloud step can set
 	# DisableCloud authoritatively without writing a partial config.
 	seed_slsteam_config "$extract_root/res/config.yaml"
+
+	# SLSsteam and CloudRedirect can call notify-send during Steam startup.
+	# If the desktop notification service is unresponsive, the synchronous
+	# call blocks Steam before steamwebhelper appears. Keep notifications
+	# best-effort and bound their wait without changing global system files.
+	local notify_shim="$HOME/.local/share/SLSsteam/path/notify-send"
+	mkdir -p "$(dirname "$notify_shim")"
+	cat > "$notify_shim" <<'SH'
+#!/bin/sh
+(/usr/bin/timeout 2 /usr/bin/notify-send "$@" >/dev/null 2>&1) </dev/null &
+exit 0
+SH
+	chmod +x "$notify_shim"
 }
 
 # ============================================================================
